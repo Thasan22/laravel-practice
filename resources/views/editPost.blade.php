@@ -13,8 +13,9 @@
                         <div class="alert alert-success">{{session('msg')}}</div>
                     @endif
 
-                    <form action="{{route('store')}}" method="POST">
+                    <form action="{{route('update', $post->id)}}" method="POST">
                         @csrf
+                        @method('PUT')
                         <input value="{{$post->title}}" name="title" type="text" placeholder="Post title" class="form-control mb-3">
                         @error('title')
                             <span class="text-danger">{{$message}}</span>                            
@@ -27,7 +28,7 @@
                         @error('author')
                             <span class="text-danger">{{$message}}</span>                            
                         @enderror <br>
-                        <button type="submit" class="submit btn btn-primary">Submit</button>
+                        <button type="submit" class="submit btn btn-primary">Update</button>
                     </form>
 
 

@@ -18,21 +18,11 @@ class PostController extends Controller
 
     public function storePost(Request  $request){
         // VALIDATION
-       $request->validate([
-        'title'=>'required|min:5',
-        'detail'=>'required',
-       ],[
-        'title.required'=>"Please enter title",
-        'detail.required'=>"Please write detail about the post",
-       ]);
+       $this->validation($request);
 
 
         //STORE DATA
-        $post = new Post();
-        $post->title = $request->title;
-        $post->detail = $request->detail;
-        $post->author = $request->author;
-        $post->save();
+        $this->storeAndUpdate($request);
 
         return back()->with('msg','The post has been added');
 
@@ -50,5 +40,32 @@ class PostController extends Controller
             $post = Post::findOrFail($id);
             return view('editPost',compact('post'));
         }
+        function updatePost(Request $req,$id){
+             // VALIDATION
+            $this->validation($req);
+            
+            // UPDATE DATA
+            $this->storeAndUpdate($req,$id);
+            return redirect(route('posts'));
+        }
+
+    // STORE AND EDIT FUNCTION
+    private function storeAndUpdate($req,$id=null){
+        $post = Post::findOrNew($id);
+            $post->title = $req->title;
+            $post->detail = $req->detail;
+            $post->author = $req->author;
+            $post->save();
+    }
+
+    private function validation($request){
+        $request->validate([
+            'title'=>'required|min:5',
+            'detail'=>'required',
+           ],[
+            'title.required'=>"Please enter title",
+            'detail.required'=>"Please write detail about the post",
+           ]);
+    }
 
 }
